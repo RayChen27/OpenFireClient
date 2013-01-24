@@ -1,0 +1,4 @@
+OpenFireClient
+==============
+
+OpenFireClient for ios
