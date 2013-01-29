@@ -15,7 +15,7 @@
 #import "DDLog.h"
 #import "DDTTYLogger.h"
 #import "OFCChatMessage.h"
-@interface OFCXMPPManager : NSObject <XMPPRosterDelegate,NSFetchedResultsControllerDelegate>
+@interface OFCXMPPManager : NSObject <XMPPRosterDelegate,NSFetchedResultsControllerDelegate, UIAlertViewDelegate>
 {
     
     XMPPStream *xmppStream;
@@ -55,6 +55,7 @@
     NSMutableDictionary *buddyListDic;
     NSMutableDictionary *chatroomListDic;
     
+    NSMutableDictionary *subscriptions;
     NSArray *selectedBuddy;
 }
 

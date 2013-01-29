@@ -168,7 +168,7 @@ static OFCXMPPManager *sharedManager = nil;
     }
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOFCServerLoginSuccess object:self];
-    [self requestSearchFields];
+//    [self requestSearchFields];
 }
 
 - (void)goOffline
@@ -589,6 +589,12 @@ static OFCXMPPManager *sharedManager = nil;
             [self leaveChatroom];
         }
     }
+    NSString *type = [presence type];
+    if([type isEqualToString:@"subscribe"]){
+        NSLog(@"receive subscribe request");
+
+    }
+
     
 }
 
@@ -748,7 +754,7 @@ static OFCXMPPManager *sharedManager = nil;
 		
 		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         
-        NSPredicate *predicate = [NSPredicate predicateWithFormat: @"streamBareJidStr == %@", [[xmppStream myJID] bare]];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat: @"streamBareJidStr == %@ AND (subscription == 'both')", [[xmppStream myJID] bare]];
 		[fetchRequest setEntity:entity];
 		[fetchRequest setSortDescriptors:sortDescriptors];
 		[fetchRequest setFetchBatchSize:10];
@@ -898,27 +904,58 @@ static OFCXMPPManager *sharedManager = nil;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPRosterDelegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
- - (void)xmppRoster:(XMPPRoster *)sender didReceiveBuddyRequest:(XMPPPresence *)presence
- {
- DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
- 
- XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[presence from]
- xmppStream:xmppStream
- managedObjectContext:[self managedObjectContext_roster]];
- 
- NSString *displayName = [user displayName];
- NSString *jidStrBare = [presence fromStr];
- NSString *body = nil;
- 
- if (![displayName isEqualToString:jidStrBare])
- {
- body = [NSString stringWithFormat:@"Buddy request from %@ <%@>", displayName, jidStrBare];
+- (void)xmppRoster:(XMPPRoster *)sender didReceivePresenceSubscriptionRequest:(XMPPPresence *)presence
+{
+     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+     
+//     XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[presence from]
+//     xmppStream:xmppStream
+//     managedObjectContext:[self managedObjectContext_roster]];
+    
+     NSString *displayName = [[presence from] user];
+     NSString *jidStrBare = [presence fromStr];
+     NSString *body = nil;
+     
+     if (![displayName isEqualToString:jidStrBare])
+     {
+         body = [NSString stringWithFormat:@"Buddy request from %@ <%@>", displayName, jidStrBare];
+     }
+     else
+     {
+         body = [NSString stringWithFormat:@"Buddy request from %@", displayName];
+     }
+     UIAlertView *subscriptionAlertView = [[UIAlertView alloc]initWithTitle:@"Subscription"
+                                                                    message:body
+                                                                   delegate:self
+                                                          cancelButtonTitle:@"Deny"
+                                                          otherButtonTitles:@"Accept", nil];
+    if (subscriptions == nil) {
+        subscriptions = [NSMutableDictionary dictionary];
+    }
+    subscriptionAlertView.delegate = self;
+    NSInteger hash = [[presence from] hash];
+    subscriptionAlertView.tag = hash;
+    [subscriptions setObject:[presence from] forKey:[NSNumber numberWithInt:hash]];
+    [subscriptionAlertView show];
  }
- else
- {
- body = [NSString stringWithFormat:@"Buddy request from %@", displayName];
- }
- }
- */
+
+#pragma mark -
+#pragma mark AlertView Delegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"Click Button on %d", buttonIndex);
+    XMPPJID *fromJID = [subscriptions objectForKey:[NSNumber numberWithInt:alertView.tag]];
+    switch (buttonIndex) {
+        case 0:
+            [self.xmppRoster rejectPresenceSubscriptionRequestFrom:fromJID];
+            break;
+        case 1:
+            [self.xmppRoster acceptPresenceSubscriptionRequestFrom:fromJID andAddToRoster:YES];
+            [self.xmppRoster subscribePresenceToUser:fromJID];
+            break;
+        default:
+            break;
+    }
+}
+
 @end

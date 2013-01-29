@@ -44,6 +44,7 @@
         
         self.searchButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         self.searchButton.frame = CGRectMake(275 , 2, 40, 36);
+        [self.searchButton setTitle:@"Search" forState:UIControlStateNormal];
         [self.searchButton addTarget:self action:@selector(sendSearchRequestToServer) forControlEvents:UIControlEventTouchUpInside];
         
         self.resultsTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 40, 320, self.view.bounds.size.height) style:UITableViewStylePlain];

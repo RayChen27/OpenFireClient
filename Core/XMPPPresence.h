@@ -11,6 +11,15 @@
  * Simply add your own category to XMPPPresence to extend it with your own custom methods.
 **/
 
+typedef NSString presenceType;
+
+enum presenceType{
+    both,
+    to,
+    from,
+    none
+};
+
 @interface XMPPPresence : XMPPElement
 
 // Converts an NSXMLElement to an XMPPPresence element in place (no memory allocations or copying)
