@@ -14,7 +14,6 @@
 @interface OFCBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSFetchedResultsControllerDelegate>
 {
     UITableView *buddyListTableView;
-    NSMutableArray *rostersArray;
     OFCChatViewController *chatViewController;
     NSMutableDictionary *buddyDictionary;
     UIAlertView *messageAlertView;

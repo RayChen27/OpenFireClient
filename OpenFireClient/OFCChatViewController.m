@@ -45,6 +45,9 @@
     [chatHistoryTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [chatHistoryTableView setDataSource:self];
     [chatHistoryTableView setDelegate:self];
+    
+
+    
     actionView = [[UIView alloc]initWithFrame:CGRectMake(0, kChatTableHeight, self.view.frame.size.width, 30)];
     [actionView setBackgroundColor:[UIColor lightGrayColor]];
     
@@ -57,6 +60,10 @@
     inputView.layer.shadowOpacity = 0.8;
     inputView.delegate = self;
     [inputView setBackgroundColor:[UIColor whiteColor]];
+    
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc]initWithTarget:inputView action:@selector(resignFirstResponder)];
+    singleTap.numberOfTapsRequired = 1;
+    [chatHistoryTableView addGestureRecognizer:singleTap];
     
     sendBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     sendBtn.frame=CGRectMake(281, 0, 39, 20);

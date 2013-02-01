@@ -33,8 +33,6 @@
          name:kOFCMessageNotification
          object:nil];
         
-        rostersArray = [[NSMutableArray alloc]initWithCapacity:10];
-        
         buddyDictionary = [[NSMutableDictionary alloc]initWithCapacity:1];
         
         rosterFetchedResultsController = [[OFCXMPPManager sharedManager] rosterFetchedResultsController];
@@ -68,24 +66,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-#pragma mark -
-#pragma mark buddyList update
-
-- (void)fetchRosters
-{
-    NSArray *sections = [rosterFetchedResultsController sections];
-    int sectionsCount = [[rosterFetchedResultsController sections] count];
-    [rostersArray removeAllObjects];
-    for (int sectionIndex = 0; sectionIndex < sectionsCount; sectionIndex++) {
-        id<NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
-        for (int sectionInfoIndex = 0 ; sectionInfoIndex < sectionInfo.numberOfObjects; sectionInfoIndex++) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:sectionInfoIndex inSection:sectionIndex];
-            XMPPUserCoreDataStorageObject *roster = [rosterFetchedResultsController objectAtIndexPath:indexPath];
-            [rostersArray addObject:roster];
-        }
-    }
 }
 
 - (void)receiveNewMessages:(NSNotification*)notification;
@@ -193,10 +173,8 @@
 //{
 //    switch (type) {
 //        case NSFetchedResultsChangeMove:
-//            [rostersArray removeObjectAtIndex:indexPath.row];
-//            [rostersArray insertObject:[rosterFetchedResultsController objectAtIndexPath:newIndexPath] atIndex:newIndexPath.row];
-//            [buddyListTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath ] withRowAnimation:NO];
 //            [buddyListTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:NO];
+//            [buddyListTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath ] withRowAnimation:NO];
 //            break;
 //        default:
 //            break;

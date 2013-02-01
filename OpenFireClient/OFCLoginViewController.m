@@ -66,8 +66,14 @@
     [resetBtn setTitle:@"Reset" forState:UIControlStateNormal];
     [resetBtn addTarget:self action:@selector(resetFields) forControlEvents:UIControlEventTouchUpInside];
     
+    anoymousBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [anoymousBtn setFrame:CGRectMake(50, 150, 100, 30)];
+    [anoymousBtn setTitle:@"Anoymous" forState:UIControlStateNormal];
+    [anoymousBtn addTarget:self action:@selector(anoymousLoginXMPPServer) forControlEvents:UIControlEventTouchUpInside];
+    
     [self.view addSubview:resetBtn];
     [self.view addSubview:loginBtn];
+    [self.view addSubview:anoymousBtn];
     [self.view addSubview:JIDField];
     [self.view addSubview:pwField];
 }
@@ -91,7 +97,7 @@
         return;
     }
     NSString *completeJID = [JIDField.text stringByAppendingFormat:@"@%@",kOFCXMPPServerDomain];
-    if(![[sharedDelegate xmppManager]connectWithJID:completeJID password:pwField.text]){
+    if(![[OFCXMPPManager sharedManager]connectWithJID:completeJID password:pwField.text]){
         UIAlertView *alterView = [[UIAlertView alloc]initWithTitle:@"Connection Failed" message:@"Please Check your network" delegate:nil cancelButtonTitle:@"Retry" otherButtonTitles:nil, nil];
         [alterView show];
     }
@@ -102,6 +108,15 @@
     JIDField.text = nil;
     pwField.text  = nil;
     [JIDField becomeFirstResponder];
+}
+
+-(void)anoymousLoginXMPPServer
+{
+//    NSString *completeJID = [JIDField.text stringByAppendingFormat:@"@%@",kOFCXMPPServerDomain];
+    if(![[OFCXMPPManager sharedManager]anoymousConnection]){
+        UIAlertView *alterView = [[UIAlertView alloc]initWithTitle:@"Connection Failed" message:@"Please Check your network" delegate:nil cancelButtonTitle:@"Retry" otherButtonTitles:nil, nil];
+        [alterView show];
+    }
 }
 -(void)serverLoginSuccess:(NSNotification*)notification
 {

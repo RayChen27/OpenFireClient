@@ -15,7 +15,7 @@
 #import "DDLog.h"
 #import "DDTTYLogger.h"
 #import "OFCChatMessage.h"
-@interface OFCXMPPManager : NSObject <XMPPRosterDelegate,NSFetchedResultsControllerDelegate, UIAlertViewDelegate>
+@interface OFCXMPPManager : NSObject <XMPPRosterDelegate,NSFetchedResultsControllerDelegate>
 {
     
     XMPPStream *xmppStream;
@@ -46,6 +46,8 @@
     BOOL allowSelfSignedCertificates;
 	BOOL allowSSLHostNameMismatch;
     
+    BOOL isAnoymous;
+    
     NSManagedObjectContext *managedObjectContext_roster;
     NSManagedObjectContext *managedObjectContext_messages;
 	NSManagedObjectContext *managedObjectContext_capabilities;
@@ -55,8 +57,8 @@
     NSMutableDictionary *buddyListDic;
     NSMutableDictionary *chatroomListDic;
     
-    NSMutableDictionary *subscriptions;
     NSArray *selectedBuddy;
+    
 }
 
 @property (nonatomic, readonly) XMPPStream *xmppStream;
@@ -71,6 +73,7 @@
 @property (nonatomic, strong) XMPPJID *myJID;
 + (OFCXMPPManager *)sharedManager;
 - (BOOL)connectWithJID:(NSString *)JID password:(NSString *)myPassword;
+- (BOOL)anoymousConnection;
 - (void)disconnect;
 - (NSArray *)updateChatroomList;
 - (NSArray *)fetchRosters;

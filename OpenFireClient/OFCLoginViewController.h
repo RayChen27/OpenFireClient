@@ -19,6 +19,7 @@
     UITextField *pwField;
     UIButton *loginBtn;
     UIButton *resetBtn;
+    UIButton *anoymousBtn;
     BOOL didLogined;
 }
 @property (nonatomic,strong) NSString *JID;
